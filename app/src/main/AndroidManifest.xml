@@ -29,6 +29,13 @@
                 <action android:name="android.intent.action.default"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.pages.login.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.default"/>
+            </intent-filter>
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

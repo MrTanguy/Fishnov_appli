@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fishnov.R
 import com.example.fishnov.databinding.ActivityMainBinding
+import com.example.fishnov.ui.pages.login.LoginActivity
 import com.example.fishnov.ui.pages.register.RegisterActivity
 
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViews() {
         binding.registerButton.setOnClickListener { startActivity(Intent(this, RegisterActivity::class.java))}
+        binding.loginButton.setOnClickListener { startActivity(Intent(this, LoginActivity::class.java))}
     }
 }
 

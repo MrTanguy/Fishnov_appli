@@ -2,6 +2,7 @@ package com.example.fishnov.ui.pages.register
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AppCompatActivity
@@ -36,24 +37,30 @@ class RegisterActivity : AppCompatActivity() {
 
     fun checkRegister(){
 
-        val user = RegisterForm(
-            first_name = binding.editTextFirstname.toString(),
-            last_name = binding.editTextLastname.toString(),
-            email = binding.editTextEmail.toString(),
-            password = binding.editTextPassword.toString(),
-            type = "trawler",
-            registration_trawler = binding.editTextTrawlerRegistration.toString()
+        // Vérification si les inputs ne sont pas vides
+        if (binding.editTextFirstname.text.toString().isEmpty()
+            or binding.editTextLastname.text.toString().isEmpty()
+            or binding.editTextEmail.text.toString().isEmpty()
+            or binding.editTextPassword.text.toString().isEmpty()
+            or binding.editTextConfirmPassword.text.toString().isEmpty()
+            or binding.editTextTrawlerRegistration.text.toString().isEmpty()) {
+            Toast.makeText(this,"Please fill up all the form", Toast.LENGTH_SHORT).show()
+
+        // Vérification si le mot de passe et sa confimation match
+        } else if (binding.editTextPassword.text.toString() != binding.editTextConfirmPassword.text.toString()) {
+            Toast.makeText(this,"Password and confirm password aren't matching", Toast.LENGTH_SHORT).show()
+
+        } else {
+            val registerForm = RegisterForm(
+                first_name = binding.editTextFirstname.text.toString(),
+                last_name = binding.editTextLastname.text.toString(),
+                email = binding.editTextEmail.text.toString(),
+                password = binding.editTextPassword.text.toString(),
+                type = "trawler",
+                registration_trawler = binding.editTextTrawlerRegistration.text.toString()
             )
+            val result = viewModel.callAPIregister(registerForm)
 
-        val gson = Gson()
-        val userJson = gson.toJson(user)
-        val result = viewModel.callAPIregister(userJson)
-        //Log.d("result", result)
-
-
-        //Log.d("User", user.toString())
-
+        }
     }
-
-
 }

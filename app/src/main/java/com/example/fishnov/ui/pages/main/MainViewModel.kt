@@ -4,6 +4,4 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
 
-    var test: String = "HEYYY"
-
 }
