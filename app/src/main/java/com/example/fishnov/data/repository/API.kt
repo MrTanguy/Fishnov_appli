@@ -54,7 +54,7 @@ class API () {
         }
     }
 
-    suspend fun login(loginForm: LoginForm){
+    suspend fun login(loginForm: LoginForm): String {
         return withContext(Dispatchers.IO) {
             val headers = Headers.Builder()
                 .add("Content-Type", "application/json")
@@ -63,7 +63,7 @@ class API () {
 
             val formBody = FormBody.Builder()
                 .add("email", loginForm.email)
-                .add( "password", loginForm.password)
+                .add("password", loginForm.password)
                 .build()
 
             val request: Request = Request.Builder()
@@ -77,11 +77,15 @@ class API () {
 
                 val responseBody = response.body()?.string() ?: ""
 
-                Log.d("respondeBody", responseBody)
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Invalid credentials")
+                }
             } catch (e: IOException) {
                 Log.e("ERRORTANGUY", e.toString())
+                throw IOException("Error occurred during login")
             }
         }
     }
-
 }

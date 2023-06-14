@@ -1,7 +1,6 @@
 package com.example.fishnov.ui.pages.register
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.fishnov.R
 import com.example.fishnov.data.classes.RegisterForm
 import com.example.fishnov.databinding.ActivityRegisterBinding
-import com.google.gson.Gson
 
 class RegisterActivity : AppCompatActivity() {
 
