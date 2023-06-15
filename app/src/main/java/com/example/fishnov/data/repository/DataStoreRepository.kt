@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import java.io.IOException
 
-class DataStoreRepository(context: Context) {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "bearer_token")
+class DataStoreRepository private constructor(context: Context) {
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "bearerToken")
 
     private object Keys {
-        val BEARER_TOKEN = stringPreferencesKey("bearer_token")
+        val BEARER_TOKEN = stringPreferencesKey("bearerToken")
+        val USER_ID = intPreferencesKey("userId")
     }
 
     private val dataStore = context.dataStore
@@ -25,17 +22,27 @@ class DataStoreRepository(context: Context) {
         }
     }
 
-    val bearerTokenFlow: Flow<String>
-        get() = dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[Keys.BEARER_TOKEN] ?: ""
-            }
+    suspend fun getBearerToken(): String {
+        return dataStore.data.first()[Keys.BEARER_TOKEN] ?: ""
+    }
 
+    suspend fun saveUserId(userId: Int) {
+        dataStore.edit { preferences ->
+            preferences[Keys.USER_ID] = userId
+        }
+    }
+
+    suspend fun getUserId(): Int {
+        return dataStore.data.first()[Keys.USER_ID] ?: 0
+    }
+
+    companion object {
+        private var instance: DataStoreRepository? = null
+
+        fun getInstance(context: Context): DataStoreRepository {
+            return instance ?: synchronized(this) {
+                instance ?: DataStoreRepository(context.applicationContext).also { instance = it }
+            }
+        }
+    }
 }

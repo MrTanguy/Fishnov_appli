@@ -17,9 +17,8 @@ class API () {
     private var client = OkHttpClient()
     private var url = "http://10.0.2.2:80/api"
 
-    suspend fun register(registerForm: RegisterForm){
+    suspend fun register(registerForm: RegisterForm): String {
         return withContext(Dispatchers.IO) {
-
             val headers = Headers.Builder()
                 .add("Content-Type", "application/json")
                 .add("Accept", "application/json")
@@ -29,7 +28,7 @@ class API () {
                 .add("first_name", registerForm.first_name)
                 .add("last_name", registerForm.last_name)
                 .add("email", registerForm.email)
-                .add( "password", registerForm.password)
+                .add("password", registerForm.password)
                 .add("password_confirmation", registerForm.password)
                 .add("type", registerForm.type)
                 .add("registration_trawler", registerForm.registration_trawler)
@@ -43,16 +42,19 @@ class API () {
 
             try {
                 val response = client.newCall(request).execute()
-
                 val responseBody = response.body()?.string() ?: ""
 
-                Log.d("respondeBody", responseBody)
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException(responseBody)
+                }
             } catch (e: IOException) {
-                Log.e("ERRORTANGUY", e.toString())
+                throw IOException("$e")
             }
-
         }
     }
+
 
     suspend fun login(loginForm: LoginForm): String {
         return withContext(Dispatchers.IO) {
@@ -83,8 +85,7 @@ class API () {
                     throw IOException("Invalid credentials")
                 }
             } catch (e: IOException) {
-                Log.e("ERRORTANGUY", e.toString())
-                throw IOException("Error occurred during login")
+                throw IOException(e)
             }
         }
     }

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AppCompatActivity
 import com.example.fishnov.R
+import com.example.fishnov.data.repository.DataStoreRepository
 import com.example.fishnov.databinding.ActivityMainBinding
 import com.example.fishnov.ui.pages.login.LoginActivity
 import com.example.fishnov.ui.pages.register.RegisterActivity
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        DataStoreRepository.getInstance(applicationContext)
 
         setupViews()
     }

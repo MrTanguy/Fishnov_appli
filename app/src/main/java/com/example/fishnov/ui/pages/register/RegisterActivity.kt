@@ -1,13 +1,17 @@
 package com.example.fishnov.ui.pages.register
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.dataStore
 import com.example.fishnov.R
 import com.example.fishnov.data.classes.RegisterForm
+import com.example.fishnov.data.repository.DataStoreRepository
 import com.example.fishnov.databinding.ActivityRegisterBinding
+import com.example.fishnov.ui.pages.profile.ProfileActivity
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -59,6 +63,23 @@ class RegisterActivity : AppCompatActivity() {
             )
             val result = viewModel.callAPIregister(registerForm)
 
+            result.onSuccess { dataStore ->
+                viewModel.saveToDataStoreRepository(dataStore.bearerToken, dataStore.userId)
+                startActivity(Intent(this@RegisterActivity, ProfileActivity::class.java))
+            }
+            result.onFailure { error ->
+                var errorMessage = "Error in "
+                if (error.message?.contains("The email must be a valid email address.") == true) {
+                    errorMessage += "invalid email "
+                }
+                if (error.message?.contains("The email has already been taken.") == true) {
+                    errorMessage += "email alreasy used "
+                }
+                if (error.message?.contains("password") == true) {
+                    errorMessage += "password (8 characters minimum, min, maj, number)"
+                }
+                Toast.makeText(this@RegisterActivity, errorMessage, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
