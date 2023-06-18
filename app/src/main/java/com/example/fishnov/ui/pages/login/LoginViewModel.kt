@@ -23,7 +23,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun callAPIlogin(loginForm: LoginForm): Result<DataStoreObject> = runBlocking {
         return@runBlocking try {
 
-            saveToDataStoreRepository("", 0)
+            //saveToDataStoreRepository("", 0)
 
             val response = repository.login(loginForm)
 

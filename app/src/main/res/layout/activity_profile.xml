@@ -16,16 +16,10 @@
         tools:context=".ui.pages.register.RegisterActivity">
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewModel.token}"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{viewModel.id}"/>
+            android:text="TextView" />
 
 
     </LinearLayout>

@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
         }
         result.onFailure { error ->
             // Gestion de l'erreur de connexion
-            Toast.makeText(this@LoginActivity, "Login failed: ${error.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@LoginActivity, "Login failed: Invalid credentials", Toast.LENGTH_SHORT).show()
         }
     }
 }
