@@ -1,13 +1,14 @@
 package com.example.fishnov.ui.pages.profile
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.fishnov.databinding.ActivityProfileBinding
 import com.example.fishnov.R
-import kotlinx.coroutines.launch
+import com.example.fishnov.ui.pages.editProfile.EditProfileActvity
+import org.json.JSONObject
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -16,14 +17,25 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         viewModel = ViewModelProvider(this)[ProfileViewModel::class.java]
         viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))[ProfileViewModel::class.java]
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_profile)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        viewModel.token = viewModel.callToken()
-        viewModel.id = viewModel.callId().toString()
+        setupViews()
+    }
 
+    private fun setupViews() {
+        val result = viewModel.getUserInfo()
+        val jsonObject = JSONObject(result)
+        viewModel.email = jsonObject["email"].toString()
+        viewModel.firstName = jsonObject["first_name"].toString()
+        viewModel.lastName = jsonObject["last_name"].toString()
+        viewModel.registrationTrawler = jsonObject["registration_trawler"].toString()
+
+        binding.editButton.setOnClickListener() {
+            startActivity(Intent(this@ProfileActivity, EditProfileActvity::class.java))
+        }
     }
 }

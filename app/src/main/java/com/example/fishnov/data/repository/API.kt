@@ -9,7 +9,7 @@ import okhttp3.FormBody
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.IOException
 
 class API () {
@@ -83,6 +83,76 @@ class API () {
                     return@withContext responseBody
                 } else {
                     throw IOException("Invalid credentials")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
+
+    suspend fun get_user_info(token: String, id: Int): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $token")
+                .build()
+
+            val request: Request = Request.Builder()
+                .url("$url/user/$id")
+                .headers(headers)
+                .get()
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Invalid credentials")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
+
+    suspend fun update_user_info(token: String, id: Int, form: JSONObject): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $token")
+                .build()
+
+            Log.d("form", form.toString())
+
+            val formBody = FormBody.Builder()
+
+            for (key in form.keys()) {
+                formBody.add(key, form.get(key).toString())
+            }
+
+            Log.d("formBody", formBody.toString())
+
+            val request: Request = Request.Builder()
+                .url("$url/user/update/$id")
+                .headers(headers)
+                .post(formBody.build())
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Error")
                 }
             } catch (e: IOException) {
                 throw IOException(e)

@@ -3,7 +3,6 @@ package com.example.fishnov.ui.pages.login
 
 import android.os.Bundle
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
 import com.example.fishnov.data.classes.LoginForm
 import com.example.fishnov.databinding.ActivityLoginBinding
-import com.example.fishnov.ui.pages.profile.ProfileActivity
+import com.example.fishnov.ui.pages.connected.ConnectedActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -44,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
 
         result.onSuccess {  dataStore ->
             viewModel.saveToDataStoreRepository(dataStore.bearerToken, dataStore.userId)
-            startActivity(Intent(this@LoginActivity, ProfileActivity::class.java))
+            startActivity(Intent(this@LoginActivity, ConnectedActivity::class.java))
         }
         result.onFailure { error ->
             // Gestion de l'erreur de connexion
