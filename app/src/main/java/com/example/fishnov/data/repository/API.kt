@@ -90,7 +90,7 @@ class API () {
         }
     }
 
-    suspend fun get_user_info(token: String, id: Int): String {
+    suspend fun getUserInfo(token: String, id: Int): String {
         return withContext(Dispatchers.IO) {
             val headers = Headers.Builder()
                 .add("Content-Type", "application/json")
@@ -128,7 +128,71 @@ class API () {
                 .add("Authorization", "Bearer $token")
                 .build()
 
-            Log.d("form", form.toString())
+            val formBody = FormBody.Builder()
+
+            for (key in form.keys()) {
+                formBody.add(key, form.get(key).toString())
+            }
+
+            val request: Request = Request.Builder()
+                .url("$url/user/update/$id")
+                .headers(headers)
+                .post(formBody.build())
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Error")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
+
+    suspend fun getCompanyInfo (id: String, token: String): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $token")
+                .build()
+
+            val request: Request = Request.Builder()
+                .url("$url/company/$id")
+                .headers(headers)
+                .get()
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Error")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
+
+    suspend fun joinCompany(bearer_token: String, form: JSONObject): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $bearer_token")
+                .build()
 
             val formBody = FormBody.Builder()
 
@@ -136,10 +200,8 @@ class API () {
                 formBody.add(key, form.get(key).toString())
             }
 
-            Log.d("formBody", formBody.toString())
-
             val request: Request = Request.Builder()
-                .url("$url/user/update/$id")
+                .url("$url/company/join")
                 .headers(headers)
                 .post(formBody.build())
                 .build()

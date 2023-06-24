@@ -2,12 +2,15 @@ package com.example.fishnov.ui.pages.profile
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.databinding.ActivityProfileBinding
 import com.example.fishnov.R
 import com.example.fishnov.ui.pages.editProfile.EditProfileActvity
+import com.example.fishnov.ui.pages.joinCompany.JoinCompanyActivity
+import com.example.fishnov.ui.pages.joinCompany.JoinCompanyViewModel
 import org.json.JSONObject
 
 class ProfileActivity : AppCompatActivity() {
@@ -27,15 +30,29 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        val result = viewModel.getUserInfo()
-        val jsonObject = JSONObject(result)
-        viewModel.email = jsonObject["email"].toString()
-        viewModel.firstName = jsonObject["first_name"].toString()
-        viewModel.lastName = jsonObject["last_name"].toString()
-        viewModel.registrationTrawler = jsonObject["registration_trawler"].toString()
+        val resultUser = viewModel.getUserInfo()
+        val jsonObjectUser = JSONObject(resultUser)
+        if (jsonObjectUser["id_company"].equals(null)) {
+            binding.companyButton.visibility = View.VISIBLE
+            binding.company.visibility = View.GONE
+        } else {
+            val resultCompany = viewModel.getCompanyInfo(jsonObjectUser["id_company"].toString())
+            val jsonObjectCompany = JSONObject(resultCompany)
+            viewModel.company = jsonObjectCompany["name_company"].toString()
+            binding.companyButton.visibility = View.GONE
+            binding.company.visibility = View.VISIBLE
+        }
+        viewModel.email = jsonObjectUser["email"].toString()
+        viewModel.firstName = jsonObjectUser["first_name"].toString()
+        viewModel.lastName = jsonObjectUser["last_name"].toString()
+        viewModel.registrationTrawler = jsonObjectUser["registration_trawler"].toString()
 
         binding.editButton.setOnClickListener() {
             startActivity(Intent(this@ProfileActivity, EditProfileActvity::class.java))
+        }
+
+        binding.companyButton.setOnClickListener() {
+            startActivity(Intent(this@ProfileActivity, JoinCompanyActivity::class.java))
         }
     }
 }

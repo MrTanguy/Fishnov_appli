@@ -63,7 +63,10 @@ class RegisterActivity : AppCompatActivity() {
 
             result.onSuccess { dataStore ->
                 viewModel.saveToDataStoreRepository(dataStore.bearerToken, dataStore.userId)
-                startActivity(Intent(this@RegisterActivity, ConnectedActivity::class.java))
+                val intent = Intent(this@RegisterActivity, ConnectedActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
             result.onFailure { error ->
                 var errorMessage = "Error in "

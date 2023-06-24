@@ -43,7 +43,10 @@ class LoginActivity : AppCompatActivity() {
 
         result.onSuccess {  dataStore ->
             viewModel.saveToDataStoreRepository(dataStore.bearerToken, dataStore.userId)
-            startActivity(Intent(this@LoginActivity, ConnectedActivity::class.java))
+            val intent = Intent(this@LoginActivity, ConnectedActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
         result.onFailure { error ->
             // Gestion de l'erreur de connexion

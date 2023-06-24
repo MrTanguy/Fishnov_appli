@@ -1,4 +1,4 @@
-package com.example.fishnov.ui.pages.editProfile
+package com.example.fishnov.ui.pages.joinCompany
 
 import android.app.Application
 import android.util.Log
@@ -11,52 +11,45 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
-class EditProfileViewModel(application: Application) : AndroidViewModel(application) {
+class JoinCompanyViewModel(application: Application) : AndroidViewModel(application) {
 
     private val context = getApplication<Application>()
     private val API = API()
     private val dataStoreRepository = DataStoreRepository.getInstance(context)
 
-    var firstName:String = ""
-    var lastName:String = ""
-    var registrationTrawler:String = ""
-
-    fun callToken(): String = runBlocking {
-        return@runBlocking dataStoreRepository.getBearerToken()
-    }
-
     fun callId(): Int = runBlocking {
         return@runBlocking dataStoreRepository.getUserId()
     }
 
-    fun getUserInfo(): String = runBlocking  {
-        return@runBlocking API.getUserInfo(callToken(), callId())
+    fun callToken(): String = runBlocking {
+        return@runBlocking dataStoreRepository.getBearerToken()
+    }
+    fun saveToDataStoreRepository(bearerToken: String) {
+        viewModelScope.launch {
+            dataStoreRepository.saveBearerToken(bearerToken)
+        }
     }
 
-    fun updateUserInfo(form: JSONObject): Result<DataStoreObject> = runBlocking  {
+    fun joinCompany(form: JSONObject): Result<DataStoreObject> = runBlocking  {
         return@runBlocking try {
-            val response = API.update_user_info(callToken(), callId(), form)
+
+            Log.d("tanguy", "JoinCompanyViewModel : $form")
+
+            val response = API.joinCompany(callToken(), form)
             val answer = JSONObject(response)
             val accessToken = answer.optString("access_token")
             val id = answer.optInt("id")
+            Log.d("tanguy", "JoinCompanyViewModel : $answer")
             if (accessToken.isNotEmpty() and (id.toString() != "0")) {
                 val dataStoreObject = DataStoreObject(accessToken, id)
                 // Update réussie, DataStoreObject retourné
                 Result.success(dataStoreObject)
             } else {
-                // Erreur retournez une erreur avec le message approprié
                 val errorMessage = answer.optString("message", "Error")
                 Result.failure(Exception(errorMessage))
             }
         } catch (e: Exception) {
-            // retournez l'exception
             Result.failure(e)
-        }
-    }
-
-    fun saveToDataStoreRepository(bearerToken: String) {
-        viewModelScope.launch {
-            dataStoreRepository.saveBearerToken(bearerToken)
         }
     }
 

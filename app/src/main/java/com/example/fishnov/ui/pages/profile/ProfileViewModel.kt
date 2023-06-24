@@ -7,6 +7,7 @@ import com.example.fishnov.data.repository.API
 import com.example.fishnov.data.repository.DataStoreRepository
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -18,6 +19,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     var firstName:String = ""
     var lastName:String = ""
     var registrationTrawler:String = ""
+    var company:String = ""
 
     fun callToken(): String = runBlocking {
         return@runBlocking dataStoreRepository.getBearerToken()
@@ -28,7 +30,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun getUserInfo(): String = runBlocking  {
-        return@runBlocking API.get_user_info(callToken(), callId())
+        return@runBlocking API.getUserInfo(callToken(), callId())
     }
 
+    fun getCompanyInfo(id: String): String = runBlocking  {
+        return@runBlocking API.getCompanyInfo(id, callToken())
+    }
 }

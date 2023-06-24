@@ -6,15 +6,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.datastore.dataStore
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
-import com.example.fishnov.databinding.ActivityProfileBinding
 import com.example.fishnov.databinding.ActivityProfileEditBinding
-import com.example.fishnov.ui.pages.connected.ConnectedActivity
 import com.example.fishnov.ui.pages.profile.ProfileActivity
-import com.example.fishnov.ui.pages.profile.ProfileViewModel
 import org.json.JSONObject
 
 class EditProfileActvity : AppCompatActivity() {
@@ -64,16 +59,14 @@ class EditProfileActvity : AppCompatActivity() {
         }
         val result = viewModel.updateUserInfo(form)
 
-        Log.d("EditProfileActvity", viewModel.callToken())
-
         result.onSuccess { dataStore ->
             viewModel.saveToDataStoreRepository(dataStore.bearerToken)
-            Log.d("EditProfileActvity", viewModel.callToken())
             Toast.makeText(this@EditProfileActvity, "Update saved !", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this@EditProfileActvity, ProfileActivity::class.java))
         }
         result.onFailure { error ->
-            Toast.makeText(this@EditProfileActvity, error.message, Toast.LENGTH_SHORT).show() }
+            Toast.makeText(this@EditProfileActvity, error.message, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
