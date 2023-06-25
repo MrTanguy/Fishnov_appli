@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
 import com.example.fishnov.databinding.ActivityConnectedBinding
+import com.example.fishnov.ui.pages.addFishing.AddFishingActivity
 import com.example.fishnov.ui.pages.login.LoginViewModel
 import com.example.fishnov.ui.pages.profile.ProfileActivity
 
@@ -28,6 +29,10 @@ class ConnectedActivity : AppCompatActivity() {
     private fun setupViews() {
         binding.profileButton.setOnClickListener {
             startActivity(Intent(this@ConnectedActivity, ProfileActivity::class.java))
+        }
+
+        binding.addFishingButton.setOnClickListener {
+            startActivity(Intent(this@ConnectedActivity, AddFishingActivity::class.java))
         }
     }
 
