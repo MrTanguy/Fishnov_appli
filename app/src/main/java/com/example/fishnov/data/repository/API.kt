@@ -221,4 +221,40 @@ class API () {
             }
         }
     }
+
+    suspend fun addFishing (bearer_token: String, form: JSONObject): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $bearer_token")
+                .build()
+
+            val formBody = FormBody.Builder()
+
+            for (key in form.keys()) {
+                formBody.add(key, form.get(key).toString())
+            }
+
+            val request: Request = Request.Builder()
+                .url("$url/fishing/add")
+                .headers(headers)
+                .post(formBody.build())
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Error")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
 }

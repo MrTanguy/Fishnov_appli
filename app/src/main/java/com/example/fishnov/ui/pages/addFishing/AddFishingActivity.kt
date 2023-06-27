@@ -1,12 +1,14 @@
 package com.example.fishnov.ui.pages.addFishing
 
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -14,6 +16,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
 import com.example.fishnov.databinding.ActivityAddFishingBinding
+import com.google.gson.JsonObject
+import java.time.LocalDate
 
 class AddFishingActivity : AppCompatActivity() {
 
@@ -37,13 +41,17 @@ class AddFishingActivity : AppCompatActivity() {
 
     private fun setupViews() {
         addFish()
-        addSaveButton()
+        addFishButton()
+        save()
     }
 
     private fun addFish() {
         // Création du Spinner et de l'EditText
         val newSpinner = Spinner(this)
+
         val newEditText = EditText(this)
+        newEditText.hint = "Quantity in Kg"
+        newEditText.inputType = InputType.TYPE_CLASS_NUMBER
 
         // Ajout à la liste des Spinners et des EditText
         spinnerList.add(newSpinner)
@@ -56,6 +64,7 @@ class AddFishingActivity : AppCompatActivity() {
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.WRAP_CONTENT
         )
+
 
         if (count == 0) {
             spinnerLayoutParams.topToTop = ConstraintSet.PARENT_ID
@@ -115,7 +124,7 @@ class AddFishingActivity : AppCompatActivity() {
         count++
     }
 
-    fun addSaveButton() {
+    private fun addFishButton() {
         val button = Button(this)
         button.id = View.generateViewId()
         button.text = "Add fish"
@@ -140,6 +149,55 @@ class AddFishingActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             addFish()
+        }
+    }
+
+    private fun save() {
+        val button = Button(this)
+        button.id = View.generateViewId()
+        button.text = "Save"
+
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.WRAP_CONTENT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        )
+        button.layoutParams = layoutParams
+
+        binding.constraintLayout.addView(button)
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(binding.constraintLayout)
+        constraintSet.connect(button.id, ConstraintSet.BOTTOM, binding.constraintLayout.id, ConstraintSet.BOTTOM, 100)
+        constraintSet.connect(button.id, ConstraintSet.START, binding.constraintLayout.id, ConstraintSet.START, 0)
+        constraintSet.connect(button.id, ConstraintSet.END, binding.constraintLayout.id, ConstraintSet.END, 0)
+        constraintSet.connect(binding.linearContainer.id, ConstraintSet.BOTTOM, button.id, ConstraintSet.BOTTOM, 100)
+        constraintSet.applyTo(binding.constraintLayout)
+
+        button.setOnClickListener {
+
+            val result = JsonObject()
+
+            // Ajout de la date
+            result.addProperty("date", LocalDate.now().toString())
+
+            // Ajout des poissons
+            for (i in 0 until count) {
+                if (editTextList[i].text.isNotEmpty()) {
+                    if (result.has(spinnerList[i].selectedItem.toString())) {
+                        result.addProperty(spinnerList[i].selectedItem.toString(), result.get(spinnerList[i].selectedItem.toString()).asInt + editTextList[i].text.toString().toInt())
+                    } else {
+                        result.addProperty(spinnerList[i].selectedItem.toString(), editTextList[i].text.toString().toInt())
+                    }
+                }
+            }
+
+            if (result.size() > 1) {
+
+                // Envoyer à l'API
+
+            } else {
+                Toast.makeText(this, "You must add at least one fish", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
