@@ -222,7 +222,7 @@ class API () {
         }
     }
 
-    suspend fun addFishing (bearer_token: String, form: JSONObject): String {
+    suspend fun addFishing (bearer_token: String, form: JSONObject, id: Int): String {
         return withContext(Dispatchers.IO) {
             val headers = Headers.Builder()
                 .add("Content-Type", "application/json")
@@ -237,7 +237,7 @@ class API () {
             }
 
             val request: Request = Request.Builder()
-                .url("$url/fishing/add")
+                .url("$url/fishing/add/$id")
                 .headers(headers)
                 .post(formBody.build())
                 .build()

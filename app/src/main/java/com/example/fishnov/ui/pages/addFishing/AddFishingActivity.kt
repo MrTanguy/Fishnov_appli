@@ -1,5 +1,6 @@
 package com.example.fishnov.ui.pages.addFishing
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
@@ -16,7 +17,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
 import com.example.fishnov.databinding.ActivityAddFishingBinding
+import com.example.fishnov.ui.pages.connected.ConnectedActivity
 import com.google.gson.JsonObject
+import org.json.JSONObject
 import java.time.LocalDate
 
 class AddFishingActivity : AppCompatActivity() {
@@ -175,25 +178,35 @@ class AddFishingActivity : AppCompatActivity() {
 
         button.setOnClickListener {
 
-            val result = JsonObject()
+            val result = JSONObject()
 
             // Ajout de la date
-            result.addProperty("date", LocalDate.now().toString())
+            result.put("date", LocalDate.now().toString())
 
             // Ajout des poissons
             for (i in 0 until count) {
                 if (editTextList[i].text.isNotEmpty()) {
                     if (result.has(spinnerList[i].selectedItem.toString())) {
-                        result.addProperty(spinnerList[i].selectedItem.toString(), result.get(spinnerList[i].selectedItem.toString()).asInt + editTextList[i].text.toString().toInt())
+                        // result.put(spinnerList[i].selectedItem.toString(), result.get(spinnerList[i].selectedItem.toString()).asInt + editTextList[i].text.toString().toInt())
+                        result.put(spinnerList[i].selectedItem.toString(), result.get(spinnerList[i].selectedItem.toString()))
                     } else {
-                        result.addProperty(spinnerList[i].selectedItem.toString(), editTextList[i].text.toString().toInt())
+                        result.put(spinnerList[i].selectedItem.toString(), editTextList[i].text.toString().toInt())
                     }
                 }
             }
 
-            if (result.size() > 1) {
+            if (result.length() > 1) {
 
-                // Envoyer à l'API
+                val response = viewModel.callAPIaddFishing(result)
+
+                response.onSuccess {
+                    Toast.makeText(this, "Fishing added", Toast.LENGTH_SHORT).show()
+                    finish()
+                    startActivity(Intent(this, ConnectedActivity::class.java))
+                }
+                response.onFailure {
+                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                }
 
             } else {
                 Toast.makeText(this, "You must add at least one fish", Toast.LENGTH_SHORT).show()
