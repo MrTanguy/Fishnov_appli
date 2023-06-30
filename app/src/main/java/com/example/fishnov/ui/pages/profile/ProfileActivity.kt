@@ -49,10 +49,12 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.editButton.setOnClickListener() {
             startActivity(Intent(this@ProfileActivity, EditProfileActvity::class.java))
+            finish()
         }
 
         binding.companyButton.setOnClickListener() {
             startActivity(Intent(this@ProfileActivity, JoinCompanyActivity::class.java))
+            finish()
         }
     }
 }

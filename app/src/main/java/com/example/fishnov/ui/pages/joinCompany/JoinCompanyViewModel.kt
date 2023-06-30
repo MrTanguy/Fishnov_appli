@@ -33,13 +33,10 @@ class JoinCompanyViewModel(application: Application) : AndroidViewModel(applicat
     fun joinCompany(form: JSONObject): Result<DataStoreObject> = runBlocking  {
         return@runBlocking try {
 
-            Log.d("tanguy", "JoinCompanyViewModel : $form")
-
             val response = API.joinCompany(callToken(), form)
             val answer = JSONObject(response)
             val accessToken = answer.optString("access_token")
             val id = answer.optInt("id")
-            Log.d("tanguy", "JoinCompanyViewModel : $answer")
             if (accessToken.isNotEmpty() and (id.toString() != "0")) {
                 val dataStoreObject = DataStoreObject(accessToken, id)
                 // Update réussie, DataStoreObject retourné

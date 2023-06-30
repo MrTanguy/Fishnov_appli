@@ -30,8 +30,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
             val answer = JSONObject(response)
 
-            Log.d("RegisterViewModel", "response: $answer")
-
             val accessToken = answer.optString("access_token")
             val id = answer.optInt("id")
             if (accessToken.isNotEmpty() and (id.toString() != "0")) {
@@ -55,20 +53,14 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
                         }
                         errorMap[key] = errorList
                     }
-                    Log.d("RegisterViewModel", "response errorMap: $errorMap")
                     Result.failure(Exception(errorMap.toString()))
                 } else {
-                    Log.d("RegisterViewModel", "response response: $response")
                     throw IOException(response)
                 }
             }
 
         } catch (e: Exception) {
-
-            Log.d("RegisterViewModel", "response error: $e")
-
             Result.failure(e)
-
         }
     }
 

@@ -23,8 +23,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun callAPIlogin(loginForm: LoginForm): Result<DataStoreObject> = runBlocking {
         return@runBlocking try {
 
-            //saveToDataStoreRepository("", 0)
-
             val response = repository.login(loginForm)
 
             // Vérifiez si la réponse est valide et contient l'access token
@@ -40,12 +38,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 val errorMessage = answer.optString("message", "Login failed")
                 Result.failure(Exception(errorMessage))
             }
-        } catch (e: IOException) {
-            // Erreur d'entrée/sortie, retournez une erreur avec le message approprié
-            Result.failure(Exception("IO error: ${e.message}"))
-        } catch (e: JSONException) {
-            // Erreur de parsing JSON, retournez une erreur avec le message approprié
-            Result.failure(Exception("JSON error: ${e.message}"))
         } catch (e: Exception) {
             // Autre erreur, retournez l'exception
             Result.failure(e)

@@ -18,7 +18,6 @@ class DataStoreRepository private constructor(context: Context) {
     private val dataStore = context.dataStore
 
     suspend fun saveBearerToken(bearerToken: String) {
-        Log.d("DataStoreRepository", "saveBearerToken: $bearerToken")
         dataStore.edit { preferences ->
             preferences[Keys.BEARER_TOKEN] = bearerToken
         }
@@ -31,7 +30,6 @@ class DataStoreRepository private constructor(context: Context) {
     }
 
     suspend fun saveUserId(userId: Int) {
-        Log.d("DataStoreRepository", "saveUserId: $userId")
         dataStore.edit { preferences ->
             preferences[Keys.USER_ID] = userId
         }

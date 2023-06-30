@@ -112,8 +112,6 @@ class API () {
 
                 val responseBody = response.body()?.string() ?: ""
 
-                Log.d("tanguy", responseBody)
-
                 if (response.isSuccessful) {
                     return@withContext responseBody
                 } else {

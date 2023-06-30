@@ -46,6 +46,7 @@ class JoinCompanyActivity : AppCompatActivity() {
                     viewModel.saveToDataStoreRepository(dataStore.bearerToken)
                     Toast.makeText(this@JoinCompanyActivity, "Company joined !", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@JoinCompanyActivity, ProfileActivity::class.java))
+                    finish()
                 }
                 result.onFailure { error ->
                     Toast.makeText(this@JoinCompanyActivity, "Company not find !", Toast.LENGTH_SHORT).show()
