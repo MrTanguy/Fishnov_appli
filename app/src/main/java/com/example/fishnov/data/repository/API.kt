@@ -10,7 +10,9 @@ import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
+import org.mindrot.jbcrypt.BCrypt
 import java.io.IOException
+import java.security.MessageDigest
 
 class API () {
 
@@ -105,9 +107,12 @@ class API () {
                 .build()
 
             try {
+
                 val response = client.newCall(request).execute()
 
                 val responseBody = response.body()?.string() ?: ""
+
+                Log.d("tanguy", responseBody)
 
                 if (response.isSuccessful) {
                     return@withContext responseBody
