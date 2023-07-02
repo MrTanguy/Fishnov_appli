@@ -10,6 +10,7 @@ import com.example.fishnov.databinding.ActivityConnectedBinding
 import com.example.fishnov.ui.pages.addFishing.AddFishingActivity
 import com.example.fishnov.ui.pages.login.LoginViewModel
 import com.example.fishnov.ui.pages.profile.ProfileActivity
+import com.example.fishnov.ui.pages.viewFishings.ViewFishingsActivity
 
 class ConnectedActivity : AppCompatActivity() {
 
@@ -33,6 +34,10 @@ class ConnectedActivity : AppCompatActivity() {
 
         binding.addFishingButton.setOnClickListener {
             startActivity(Intent(this@ConnectedActivity, AddFishingActivity::class.java))
+        }
+
+        binding.viewFishingsButton.setOnClickListener {
+            startActivity(Intent(this@ConnectedActivity, ViewFishingsActivity::class.java))
         }
     }
 

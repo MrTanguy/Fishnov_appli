@@ -65,7 +65,7 @@ class AddFishingActivity : AppCompatActivity() {
 
         val spinnerLayoutParams = ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ConstraintLayout.LayoutParams.MATCH_PARENT
         )
 
 
@@ -81,7 +81,7 @@ class AddFishingActivity : AppCompatActivity() {
 
         val editTextLayoutParams = ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
+            ConstraintLayout.LayoutParams.MATCH_PARENT
         )
         newEditText.layoutParams = editTextLayoutParams
 

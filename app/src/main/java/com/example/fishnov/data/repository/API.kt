@@ -10,9 +10,7 @@ import okhttp3.Headers
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
-import org.mindrot.jbcrypt.BCrypt
 import java.io.IOException
-import java.security.MessageDigest
 
 class API () {
 
@@ -260,4 +258,37 @@ class API () {
             }
         }
     }
+
+    suspend fun getAllFishings (bearer_token: String, id: Int): String {
+        return withContext(Dispatchers.IO) {
+            val headers = Headers.Builder()
+                .add("Content-Type", "application/json")
+                .add("Accept", "application/json")
+                .add("Authorization", "Bearer $bearer_token")
+                .build()
+
+            val request: Request = Request.Builder()
+                .url("$url/fishings/$id")
+                .headers(headers)
+                .get()
+                .build()
+
+            try {
+                val response = client.newCall(request).execute()
+
+                val responseBody = response.body()?.string() ?: ""
+
+                Log.d("tanguy", responseBody)
+
+                if (response.isSuccessful) {
+                    return@withContext responseBody
+                } else {
+                    throw IOException("Error")
+                }
+            } catch (e: IOException) {
+                throw IOException(e)
+            }
+        }
+    }
+
 }

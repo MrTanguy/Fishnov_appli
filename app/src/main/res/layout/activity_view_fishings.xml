@@ -1,0 +1,25 @@
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.pages.viewFishings.ViewFishingsActivity">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.fishnov.ui.pages.viewFishings.ViewFishingsViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ABBBCC">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fishings"/>
+
+    </LinearLayout>
+
+
+</layout>
