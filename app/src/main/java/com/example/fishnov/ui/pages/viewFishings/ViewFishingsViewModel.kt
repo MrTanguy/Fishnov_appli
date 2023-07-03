@@ -1,10 +1,14 @@
 package com.example.fishnov.ui.pages.viewFishings
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.fishnov.data.repository.API
 import com.example.fishnov.data.repository.DataStoreRepository
 import kotlinx.coroutines.runBlocking
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
 
 class ViewFishingsViewModel (application: Application) : AndroidViewModel(application) {
 
@@ -20,7 +24,24 @@ class ViewFishingsViewModel (application: Application) : AndroidViewModel(applic
         return@runBlocking dataStoreRepository.getUserId()
     }
 
-    fun getAllFishings(): String = runBlocking {
-        repository.getAllFishings(callToken(), callId())
+
+    fun getAllFishings(): Result<JSONArray> = runBlocking {
+        return@runBlocking try {
+           val response =  repository.getAllFishings(callToken(), callId())
+
+            val answer = JSONArray(response)
+
+            if (answer.length() != 0) {
+                Result.success(answer)
+            } else {
+                throw IOException("Nothing to display")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
+
+
+
+
 }
