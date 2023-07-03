@@ -14,7 +14,7 @@ Fishnov utilise les dépendances suivantes :
 
 - AndroidX : Bibliothèques Android Jetpack pour le développement Android moderne.
 - Kotlin Coroutines : Pour gérer la programmation asynchrone et les tâches en arrière-plan.
-- Room Database : Une couche d'abstraction sur SQLite pour la persistance des données.
+- Data binding : Gestion des données entre l'Activity, le ViewModel et le Model.
 - ViewModel : Fait partie des composants d'architecture Android, il gère les données liées à l'interface utilisateur de manière consciente du cycle de vie.
 - LiveData : Également partie des composants d'architecture Android, il permet d'observer les données pour des mises à jour automatiques de l'interface utilisateur.
 
