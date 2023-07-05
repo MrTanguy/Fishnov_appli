@@ -44,29 +44,10 @@ class AddFishingActivity : AppCompatActivity() {
 
     private fun setupViews() {
 
-        if (viewModel.hasACompany()) {
-            addFish()
-            addFishButton()
-            save()
-        } else {
-            val textView = TextView(this)
-            textView.setText("Company needed")
-            textView.textSize = 30F
+        addFish()
+        addFishButton()
+        save()
 
-            textView.gravity = Gravity.CENTER_HORIZONTAL
-
-            val layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT,
-            )
-
-            layoutParams.gravity = Gravity.CENTER_HORIZONTAL
-            textView.layoutParams = layoutParams
-
-
-            binding.linearContainer.addView(textView)
-
-        }
     }
 
     private fun addFish() {
@@ -220,7 +201,8 @@ class AddFishingActivity : AppCompatActivity() {
 
                 val response = viewModel.callAPIaddFishing(result)
 
-                response.onSuccess {
+                response.onSuccess {dataStore ->
+                    viewModel.saveToDataStoreRepository(dataStore.bearerToken)
                     Toast.makeText(this, "Fishing added", Toast.LENGTH_SHORT).show()
                     finish()
                     startActivity(Intent(this, ConnectedActivity::class.java))

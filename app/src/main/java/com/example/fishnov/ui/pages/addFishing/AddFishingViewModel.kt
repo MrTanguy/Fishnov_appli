@@ -1,12 +1,15 @@
 package com.example.fishnov.ui.pages.addFishing
 
 import android.app.Application
+import android.provider.ContactsContract.Data
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.fishnov.data.classes.DataStoreObject
 import com.example.fishnov.data.repository.API
 import com.example.fishnov.data.repository.DataStoreRepository
 import com.google.gson.JsonObject
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 
@@ -48,21 +51,9 @@ class AddFishingViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun hasACompany(): Boolean = runBlocking {
-        try {
-
-            val response = repository.getUserInfo(callToken(), callId())
-
-            val answer = JSONObject(response)
-            val accessToken = answer.optString("access_token")
-            val id = answer.optInt("id")
-
-            return@runBlocking accessToken.isNotEmpty() and (id.toString() != "0")
-
-        } catch (e: Exception) {
-            // Autre erreur, retournez l'exception
-            return@runBlocking false
+    fun saveToDataStoreRepository(bearerToken: String) {
+        viewModelScope.launch {
+            dataStoreRepository.saveBearerToken(bearerToken)
         }
-
     }
 }
