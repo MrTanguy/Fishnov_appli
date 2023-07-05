@@ -1,18 +1,18 @@
 package com.example.fishnov.ui.pages.addFishing
 
+import android.app.ActionBar.LayoutParams
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.text.Layout
 import android.util.Log
+import android.view.Gravity
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.marginTop
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.fishnov.R
@@ -43,9 +43,30 @@ class AddFishingActivity : AppCompatActivity() {
     }
 
     private fun setupViews() {
-        addFish()
-        addFishButton()
-        save()
+
+        if (viewModel.hasACompany()) {
+            addFish()
+            addFishButton()
+            save()
+        } else {
+            val textView = TextView(this)
+            textView.setText("Company needed")
+            textView.textSize = 30F
+
+            textView.gravity = Gravity.CENTER_HORIZONTAL
+
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+            )
+
+            layoutParams.gravity = Gravity.CENTER_HORIZONTAL
+            textView.layoutParams = layoutParams
+
+
+            binding.linearContainer.addView(textView)
+
+        }
     }
 
     private fun addFish() {

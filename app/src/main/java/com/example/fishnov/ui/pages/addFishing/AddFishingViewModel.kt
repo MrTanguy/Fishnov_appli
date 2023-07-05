@@ -1,6 +1,7 @@
 package com.example.fishnov.ui.pages.addFishing
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import com.example.fishnov.data.classes.DataStoreObject
 import com.example.fishnov.data.repository.API
@@ -26,6 +27,7 @@ class AddFishingViewModel(application: Application) : AndroidViewModel(applicati
         return@runBlocking try {
 
             val response = repository.addFishing(callToken(), jsonObject, callId())
+
             val answer = JSONObject(response)
             val accessToken = answer.optString("access_token")
             val id = answer.optInt("id")
@@ -44,5 +46,23 @@ class AddFishingViewModel(application: Application) : AndroidViewModel(applicati
             // Autre erreur, retournez l'exception
             Result.failure(e)
         }
+    }
+
+    fun hasACompany(): Boolean = runBlocking {
+        try {
+
+            val response = repository.getUserInfo(callToken(), callId())
+
+            val answer = JSONObject(response)
+            val accessToken = answer.optString("access_token")
+            val id = answer.optInt("id")
+
+            return@runBlocking accessToken.isNotEmpty() and (id.toString() != "0")
+
+        } catch (e: Exception) {
+            // Autre erreur, retournez l'exception
+            return@runBlocking false
+        }
+
     }
 }
